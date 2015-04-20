@@ -1,5 +1,5 @@
 # subgit
-Download a sub folder from github.com
+Download a sub folder or file from a repository on github.com
 
 ## Reference
 Based on [this

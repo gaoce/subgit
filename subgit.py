@@ -9,14 +9,16 @@ import os.path
 
 
 def parse_args():
-    description = "Download a sub folder in a github repository"
+    description = "Download a folder or file in a github repository"
     parser = argparse.ArgumentParser(description=description)
     parser.add_argument('link', help='Github link for svn')
     parser.add_argument('path', help='File or folder to download')
     parser.add_argument('--branch', default='master',
                         help='Branch in the repository')
     parser.add_argument('--software', default='git', choices=['git', 'svn'],
-                        help='Software to be used, either git or svn')
+                        help='Software to be used, '
+                             'either git (download single file or folder) '
+                             'or svn (folder only)')
     # TODO set new folder name
     return parser.parse_args()
 
@@ -30,8 +32,14 @@ def download_git(args):
         print('Sorry the folder cannot be downloaded', file=sys.stderr)
         sys.exit(1)
 
+    # Convert svn link to git link
+    if not args.link.endswith('.git'):
+        link = args.link + '.git'
+    else:
+        link = args.link
+
     # Get repository name and cd into it
-    repo_name = re.search('(.*?)\.git', os.path.basename(args.link)).group(1)
+    repo_name = re.search('(.*?)\.git', os.path.basename(link)).group(1)
     os.chdir(repo_name)
 
     # Check out the desired path
